@@ -23,23 +23,23 @@ type translationFile map[string]struct {
 // Load takes the JSON file name and returns string resources
 // in a format compatible with loc.Resources map values.
 // It will panic if there's a problem with loading/unmarshaling JSON.
-func Load(filename string) map[string]string {
+func Load(filename string) (map[string]string, error) {
 	t := make(map[string]string)
 	var tf translationFile
 
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
-		panic(err)
+		nil, err
 	}
 
 	err = json.Unmarshal(data, &tf)
 	if err != nil {
-		panic(err)
+		nil, err
 	}
 
 	// convert JSON data structure into a destination map format
 	for k, v := range tf {
 		t[k] = v.Message
 	}
-	return t
+	return t, nil
 }
